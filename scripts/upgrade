@@ -65,6 +65,7 @@ ynh_script_progression "Rebuilding the frontend..."
 pushd "$install_dir/frontend" || exit 1
     APP_BUILD="ynh" npm run build
 popd || exit 1
+_opengym_web_perms
 
 # Exercise media ships in the tarball (catalogue/media/), refreshed with every source swap.
 
