@@ -36,7 +36,6 @@ ynh_script_progression "Building the frontend..."
 pushd "$install_dir/frontend"
     APP_BUILD="ynh" npm run build
 popd
-_opengym_web_perms
 
 #=================================================
 # RESTORE THE DATA DIRECTORY
@@ -65,9 +64,11 @@ ynh_config_add_nginx
 chown -R "$app:$app" "$install_dir" "$data_dir"
 chmod 600 "$install_dir/env"
 chmod 750 "$data_dir"
-# nginx serves the bundled exercise media read-only (same chmod as install).
-chmod o+x "$install_dir/catalogue" 2>/dev/null || true
-chmod -R o+rX "$install_dir/catalogue/media" 2>/dev/null || true
+# LAST: the blanket chown above reverts the web group on dist/, and nginx
+# would then fail stat() on every file (try_files cycle = HTTP 500 on the
+# whole app). _opengym_web_perms re-grants app:www-data on the served trees
+# and replaces the old world-readable o+rX hack.
+_opengym_web_perms
 
 #=================================================
 # START SYSTEMD SERVICE
