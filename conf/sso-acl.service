@@ -10,4 +10,6 @@ StartLimitBurst=0
 
 [Service]
 Type=oneshot
+User=__APP__
+Group=__APP__
 ExecStart=/bin/sh -c 'for f in "__DATA_DIR__/db.json" "__DATA_DIR__/secret"; do [ -e "$f" ] && setfacl -m m::r-- "$f"; done; true'

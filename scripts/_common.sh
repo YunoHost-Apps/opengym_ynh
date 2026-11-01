@@ -29,6 +29,17 @@ _opengym_sso_vars() {
     redirect="${cur_path%/}/"
 }
 
+# nginx (www-data) serves frontend/dist + catalogue/media straight from
+# $install_dir (vite emits 0750 build dirs). Grant the web group exactly
+# those trees; the install dir itself stays closed to others — nobody must
+# not even traverse it (CI quality gate).
+_opengym_web_perms() {
+    chown "$app:www-data" "$install_dir" "$install_dir/frontend" "$install_dir/catalogue"
+    chmod 750 "$install_dir" "$install_dir/frontend" "$install_dir/catalogue"
+    chgrp -R www-data "$install_dir/frontend/dist" "$install_dir/catalogue/media"
+    chmod -R g+rX "$install_dir/frontend/dist" "$install_dir/catalogue/media"
+}
+
 # Renders the mint-route lua and grants nginx read-only access to secret + accounts; never write into data_dir — the map lives under /etc/$app/sso.
 _opengym_sso_setup() {
     mkdir -p "/etc/$app/sso"

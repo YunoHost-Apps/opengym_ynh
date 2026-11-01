@@ -4,7 +4,7 @@ id = "opengym"
 name = "openGym"
 description.en = "Gym and body-weight tracker with passkey login"
 
-version = "1.4.3~ynh2"
+version = "1.4.3~ynh3"
 
 maintainers = ["quartztester"]
 

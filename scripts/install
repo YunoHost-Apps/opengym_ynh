@@ -61,20 +61,16 @@ pushd "$install_dir/frontend" || exit 1
     APP_BUILD="ynh" npm run build
 popd || exit 1
 chown -R "$app:$app" "$install_dir"
-# vite creates frontend/dist at 0750 owned by the build user, which 403s nginx (www-data); open traversal.
-chmod o+x "$install_dir" "$install_dir/frontend" 2>/dev/null || true
-chmod -R o+rX "$install_dir/frontend/dist" 2>/dev/null || true
+_opengym_web_perms
 
 #=================================================
 # EXERCISE MEDIA (BUNDLED IN THE SOURCE TARBALL)
 #=================================================
 # The 6554 stills (.webp) + 6554 clips (.mp4) live at catalogue/media/ inside
 # the upstream tarball — nothing is downloaded. nginx serves them read-only at
-# __PATH__/exercise-media/ (see conf/nginx.conf); open traversal + read for
-# www-data (install_dir defaults to 0750).
+# __PATH__/exercise-media/ (see conf/nginx.conf); _opengym_web_perms above
+# granted www-data the read.
 ynh_script_progression "Opening bundled exercise media for nginx..."
-chmod o+x "$install_dir/catalogue" 2>/dev/null || true
-chmod -R o+rX "$install_dir/catalogue/media" 2>/dev/null || true
 chown -R "$app:$app" "$data_dir"
 
 #=================================================
