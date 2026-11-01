@@ -14,7 +14,10 @@ source /usr/share/yunohost/helpers
 ynh_script_progression "Moving $app from $old_domain$old_path to $domain$path..."
 
 ynh_safe_rm "/etc/nginx/conf.d/$old_domain.d/$app.conf"
-rmdir "/etc/nginx/conf.d/$old_domain.d" 2>/dev/null || true
+# NB: never rmdir the $old_domain.d dir even if now empty — it is owned by
+# the YunoHost domain/nginx machinery and ynh_config_add_nginx asserts the
+# base dir exists when writing the new conf; removing it crashes change_url
+# ("base dir is not a dir") whenever this app is the only one on the domain.
 
 ynh_app_setting_set --key=domain --value="$domain"
 ynh_app_setting_set --key=path --value="$path"
