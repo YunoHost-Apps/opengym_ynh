@@ -12,10 +12,13 @@ Environment=DATA_DIR=__DATA_DIR__
 Environment=PORT=__PORT__
 Environment=TRUST_PROXY=1
 ExecStart=__NODEJS_DIR__/node __INSTALL_DIR__/api/server.js
-NoNewPrivileges=yes
-ProtectSystem=full
-# NB: no ProtectHome — the YunoHost data_dir lives under /home/yunohost.app.
-PrivateTmp=yes
+ NoNewPrivileges=yes
+ ProtectSystem=full
+ # NB: no ProtectHome — the YunoHost data_dir lives under /home/yunohost.app.
+ PrivateTmp=yes
+ # example_ynh hardening baseline minus ProtectHome (data_dir lives under /home/yunohost.app)
+ SystemCallFilter=~@clock @debug @module @mount @obsolete @reboot @setuid @swap @cpu-emulation @privileged
+ CapabilityBoundingSet=
 Restart=on-failure
 RestartSec=5
 

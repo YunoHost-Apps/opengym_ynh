@@ -12,4 +12,10 @@ StartLimitBurst=0
 Type=oneshot
 User=__APP__
 Group=__APP__
+ # setfacl runs as the file owner on data_dir files — no capabilities needed
+ NoNewPrivileges=yes
+ PrivateTmp=yes
+ ProtectSystem=full
+ SystemCallFilter=~@clock @debug @module @mount @obsolete @reboot @setuid @swap @cpu-emulation @privileged
+ CapabilityBoundingSet=
 ExecStart=/bin/sh -c 'for f in "__DATA_DIR__/db.json" "__DATA_DIR__/secret"; do [ -e "$f" ] && setfacl -m m::r-- "$f"; done; true'
