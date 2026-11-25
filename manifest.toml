@@ -4,7 +4,7 @@ id = "opengym"
 name = "openGym"
 description.en = "Gym and body-weight tracker with passkey login"
 
-version = "1.4.3~ynh3"
+version = "1.4.3~ynh4"
 
 maintainers = ["quartztester"]
 
@@ -58,6 +58,18 @@ ram.runtime = "300M"
         # openGym authenticates with its own passkeys; no SSO injection.
         main.auth_header = false
         main.show_tile = true
+        # Phone-app carve-out: the mobile client only talks to /api/ with its
+        # own bearer token (pairing code flow), and upstream requires /api/ to
+        # answer unchanged JSON — an SSO portal bounce there breaks pairing
+        # (issue #4). Longer URI than `main`, so ssowat's longest-match wins
+        # and only /api/ is public; the SPA stays SSO-gated. `visitors` maps
+        # the permission to public:true. No SSO headers injected: the app's
+        # own auth (sessions/invites) gates every mutating endpoint.
+        [resources.permissions.api]
+        url = "/api/"
+        auth_header = false
+        show_tile = false
+        allowed = ["visitors"]
         # Portal SSO walk-in (opt-in, see config panel): a second permission
         # pinned to exactly the mint route, auth_header=true. SSOwat injects
         # identity headers ONLY here — `main` stays auth_header=false so the
