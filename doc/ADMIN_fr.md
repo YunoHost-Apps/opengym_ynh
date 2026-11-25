@@ -3,6 +3,14 @@ La permission YunoHost décide qui atteint la page — ne pas ouvrir `visitors`
 sauf si vous voulez une inscription anonyme. Données : le dossier de données
 de l'application, en fichiers simples.
 
+L'application mobile openGym ne parle qu'à `/api/`, avec son propre jeton
+bearer obtenu via un code d'appairage — l'amont exige que `/api/` réponde du
+JSON inchangé, donc la permission `api` est publique (`visitors`) et le SSO
+ne renvoie plus les appels API vers le portail. Cela n'expose que les
+endpoints d'authentification de l'app (appairage, connexion) ; le SPA et les
+pages d'administration restent derrière la permission du portail, et chaque
+appel modifiant des données exige toujours une session openGym.
+
 ## Réglages notables
 
 - **Médias des exercices** — les 6 554 illustrations (.webp) et 6 554

@@ -2,6 +2,13 @@ Accounts and passkeys live inside openGym (no LDAP/SSO identity). The portal
 permission decides who reaches the page — keep `visitors` off unless you want
 anonymous sign-up. Data folder: app data dir, plain files.
 
+The openGym phone app only talks to `/api/`, with its own bearer token from a
+pairing code — upstream requires `/api/` to answer unchanged JSON, so the
+`api` permission is public (`visitors`) and SSO never bounces API calls.
+This exposes only the app's own auth endpoints (pairing, login); the SPA and
+admin pages stay behind the portal permission, and every mutating API call
+still needs an openGym session.
+
 ## Notable settings
 
 - **Exercise media** — the 6,554 stills + 6,554 animation clips ship inside the
